@@ -9,10 +9,10 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.CatalystInstance;
 import com.facebook.react.bridge.CatalystInstanceImpl;
 import com.facebook.react.bridge.JSBundleLoader;
+import com.facebook.react.bridge.JSExceptionHandler;
 import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.jscexecutor.JSCExecutorFactory;
 import com.facebook.react.bridge.JavaScriptExecutor;
-import com.facebook.react.bridge.NativeModuleCallExceptionHandler;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.queue.ReactQueueConfigurationSpec;
@@ -76,7 +76,7 @@ public class ReactContextBuilder {
         // fresh new react context
         final ReactApplicationContext reactContext = new ReactApplicationContext(parentContext);
         if (devSupportManager != null) {
-            reactContext.setNativeModuleCallExceptionHandler(devSupportManager);
+            reactContext.setJSExceptionHandler(devSupportManager);
         }
 
         // load native modules
@@ -88,7 +88,7 @@ public class ReactContextBuilder {
                 .setJSExecutor(jsExecutor)
                 .setRegistry(nativeRegistryBuilder.build())
                 .setJSBundleLoader(jsBundleLoader)
-                .setNativeModuleCallExceptionHandler(devSupportManager != null
+                .setJSExceptionHandler(devSupportManager != null
                         ? devSupportManager
                         : createNativeModuleExceptionHandler()
                 );
@@ -132,8 +132,8 @@ public class ReactContextBuilder {
         return reactContext;
     }
 
-    private NativeModuleCallExceptionHandler createNativeModuleExceptionHandler() {
-        return new NativeModuleCallExceptionHandler() {
+    private JSExceptionHandler createNativeModuleExceptionHandler() {
+        return new JSExceptionHandler() {
             @Override
             public void handleException(Exception e) {
                 throw new RuntimeException(e);
