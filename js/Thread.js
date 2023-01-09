@@ -11,21 +11,25 @@ export default class Thread {
       throw new Error('Invalid path for thread. Only js files are supported');
     }
 
-    this.id = ThreadManager.startThread(jsPath.replace(".js", ""))
-      .then(id => {
-        DeviceEventEmitter.addListener(`Thread${id}`, (message) => {
-          !!message && this.onmessage && this.onmessage(message);
-        });
-        return id;
-      })
-      .catch(err => { throw new Error(err) });
+    DeviceEventEmitter.addListener(`Thread1`, (message) => {
+      !!message && this.onmessage && this.onmessage(message);
+    });
+
+    // this.id = ThreadManager.startThread(jsPath.replace(".js", ""))
+    //   .then(id => {
+    //     DeviceEventEmitter.addListener(`Thread${id}`, (message) => {
+    //       !!message && this.onmessage && this.onmessage(message);
+    //     });
+    //     return id;
+    //   })
+    //   .catch(err => { throw new Error(err) });
   }
 
   postMessage(message) {
-    this.id.then(id => ThreadManager.postThreadMessage(id, message));
+    ThreadManager.postThreadMessage(1, message)
   }
 
   terminate() {
-    this.id.then(ThreadManager.stopThread);
+    ThreadManager.stopThread(1)
   }
 }
